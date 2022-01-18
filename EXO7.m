@@ -1,5 +1,6 @@
-clear variables;close all;
+clear variables; close all;
 
+%creation d'une grille en 3D
 figure(1);hold on;
 a=2;b=-5;c=1;
 x2=-3:0.1:3;
@@ -14,24 +15,25 @@ mesh(X2,Y2,Z2,C);
 
 view(-30,30);
 
+%creation des 10 pnts
 pnts=10;
-Xi = -2+(2+2)*rand(1,pnts);
+Xi = -2+(2+2)*rand(1,pnts); 
 Yi = -2+(2+2)*rand(1,pnts);
 Zi = -8+(6+8)*rand(1,pnts);
 plot3(Xi,Yi,Zi,'.b');
 
-n=[a; b; c];
-n=n/norm(n);
-P = eye(3) - n*n';
-U = [Xi;Yi;Zi];
-V = zeros(3,pnts);
+n=[a; b; c]; %vecteur directeur du plan
+n=n/norm(n); %on normalise pour creer les matrices voulue
+P = eye(3) - n*n'; %projection othogonal
+U = [Xi;Yi;Zi]; %n est un tableau des pnts avec leur coords en ligne
+V = zeros(3,pnts); %initialisation
 for k=1:pnts
-    V(:,k)=P*U(:,k);
+    V(:,k)=P*U(:,k); 
 end
-plot3(V(1,:),V(2,:),V(3,:),'.k');
+plot3(V(1,:),V(2,:),V(3,:),'.k'); %V est un tableau des pnt projeter sur le plan
 
 for k=1:pnts
-    plot3([V(1,k),U(1,k)],[V(2,k),U(2,k)],[V(3,k),U(3,k)],'k');
+    plot3([V(1,k),U(1,k)],[V(2,k),U(2,k)],[V(3,k),U(3,k)],'k'); %on relie les pnts
 end
 axis equal;
 axis ([-4,4,-4,4,-8,8])
@@ -39,11 +41,11 @@ axis ([-4,4,-4,4,-8,8])
 
 
 delta=0.5;
-dQ=-delta/2+delta*rand(3,pnts);
-Q=V+dQ;
+dQ=-delta/2+delta*rand(3,pnts); 
+Q=V+dQ; %perturbation des points projeter sur le plan
 plot3(Q(1,:),Q(2,:),Q(3,:),'vk');
 
-%methode des moindres carr�s Ax=b
+%methode des moindres carrés Ax=b, on trouve les coeff du nouveau plan d'equation : ax + by + cz = 0
 A=[Q(1,:)',Q(2,:)']; %[x,y]
 b= Q(3,:)';%z
 x=(A'*A)\A'*b;
@@ -59,16 +61,7 @@ C(:,:,2)=0.2*ones(size(Z2)); % green
 C(:,:,3)=0.1*ones(size(Z2)); % blue
 mesh(X2,Y2,Z2,C);
 
-n2 = [a; b; c]; 
+n2 = [a; b; c]; %vecteur directeur du deuxieme plan perturbé
 n2=n2/norm(n2);
-alpha = acos(dot(n,n2));
+alpha = acos(dot(n,n2)); %angle entre le plan n et n2
 alpha
-
-
-
-
-
-
-
-
-    
